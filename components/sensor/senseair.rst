@@ -85,7 +85,7 @@ fresh ambient air, preferably near a window that has already been opened for a s
 -------------------------------------------------
 
 This :ref:`action <config-action>` requests the result of the background calibration procedure from the sensor
-with the given ID. The value will be printed in ESPHome logs.
+with the given ID. The value will be printed in ESPHome logs at DEBUG level.
 
 Wait at least one sensor lamp cycle after having triggered the background calibration before requesting its result.
 
