@@ -117,3 +117,67 @@ And then later in code:
     - Axis labels are currently not possible without manually placing them.
     - The grid and border color is set with it.graph(), while the traces are defined separately.
 
+Advanced usage:
+---------------
+The graphing object already does a lot of work to automatically scale the graph to the values displayed on it.  
+If you want to hook in to this to for example print axis values, you can get the current limits by calling:
+
+.. code-block:: yaml
+    id(my_graph).get_value_min()
+    id(my_graph).get_value_max()
+
+Here's an example using a Waveshare 2.13" E-Paper display
+
+.. code-block:: yaml
+    graph:
+      - id: my_graph
+        height: 61
+        width: 220
+        duration: 
+          days: 0
+          hours: 0
+          minutes: 5
+        border: True
+        y_grid: 100
+        min_value: 0
+        traces:
+          - sensor: sens
+            line_type: SOLID
+            line_thickness: 2
+            continuous: True
+    
+    font:
+      - file:
+          type: gfonts
+          family: Literata
+          weight: 400
+        id: literata_tiny
+        size: 13
+    spi:
+      clk_pin: GPIO13
+      mosi_pin: GPIO14
+    
+    display:
+      - platform: waveshare_epaper
+        id: disp
+        cs_pin: GPIO15
+        dc_pin: GPIO27
+        reset_pin: GPIO26
+        busy_pin: GPIO25
+        model: 2.13inv3
+        full_update_every: 60
+        rotation: 270
+        update_interval: 5s
+        pages: 
+          - id: home_screen
+            lambda: |-
+              int y_start = 50;
+
+              it.printf(it.get_width()-220, y_start, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_max());
+              it.printf(it.get_width()-220, y_start + 61, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_min());
+              it.graph(it.get_width()-220, y_start, id(my_graph));
+              ESP_LOGD("custom", "%f, %f", id(my_graph).get_value_min(), id(my_graph).get_value_max());
+
+See Also
+--------
+- :apiref:`graph/graph.h`
