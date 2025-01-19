@@ -123,12 +123,14 @@ The graphing object already does a lot of work to automatically scale the graph 
 If you want to hook in to this to for example print axis values, you can get the current limits by calling:
 
 .. code-block:: yaml
+
     id(my_graph).get_value_min()
     id(my_graph).get_value_max()
 
 Here's an example using a Waveshare 2.13" E-Paper display
 
 .. code-block:: yaml
+
     graph:
       - id: my_graph
         height: 61
@@ -177,6 +179,7 @@ Here's an example using a Waveshare 2.13" E-Paper display
               it.printf(it.get_width()-220, y_start + 61, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_min());
               it.graph(it.get_width()-220, y_start, id(my_graph));
               ESP_LOGD("custom", "%f, %f", id(my_graph).get_value_min(), id(my_graph).get_value_max());
+
 
 See Also
 --------
