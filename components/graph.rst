@@ -174,10 +174,12 @@ Here's an example using a Waveshare 2.13" E-Paper display
           - id: home_screen
             lambda: |-
               int y_start = 50;
-
-              it.printf(it.get_width()-220, y_start, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_max());
-              it.printf(it.get_width()-220, y_start + 61, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_min());
-              it.graph(it.get_width()-220, y_start, id(my_graph));
+              if( !std::isnan(id(my_graph).get_value_max()) )
+              {
+                it.printf(it.get_width()-220, y_start, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_max());
+                it.printf(it.get_width()-220, y_start + 61, id(literata_tiny), TextAlign::CENTER_RIGHT, "%.0f", id(my_graph).get_value_min());
+                it.graph(it.get_width()-220, y_start, id(my_graph));
+              }
               ESP_LOGD("custom", "%f, %f", id(my_graph).get_value_min(), id(my_graph).get_value_max());
 
 
