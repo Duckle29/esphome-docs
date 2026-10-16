@@ -36,6 +36,7 @@ submit a feature request (see FAQ).
 | [Mistral](#mistral_ir) | `mistral_ir`                       | yes |
 | [Mitsubishi](#mitsubishi) | `mitsubishi`                       | yes |
 | Noblex | `noblex`                           | yes |
+| [Panasonic](#climate_ir_panasonic) | `climate_ir_panasonic` | yes |
 | [Pioneer mini-split (Parker Davis)](#pd_pioneer_ir) | `pd_pioneer_ir`                    | yes |
 | [Remko, Fischer ClimaButler, TROTEC, Novamatic, Rexair, FREECOM](#remko_ar715) | `remko_ar715` | |
 | [Samsung](#samsung) | `samsung`                          | yes |
@@ -175,6 +176,61 @@ climate:
     header_high: 3265us # AC Units from LG in Brazil, for example use these timings
     header_low: 9856us
     advanced_commands_support: false
+```
+
+### `climate_ir_panasonic`
+
+The `climate_ir_panasonic` platform controls Panasonic air conditioners that use the 216 bit Panasonic IR protocol,
+called `PANASONIC_AC` by [IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266). The remote sends the whole
+state with every key press. The bytes the unit expects differ a little between model families, so set `model` to the
+one that matches your unit or remote.
+
+Supported modes are Off, Heat/Cool (the unit's auto mode), Cool, Heat, Dry and Fan Only. The target temperature is
+16 to 30 °C in steps of 1 °C. Fan modes are Auto, Low, Medium and High, plus the custom fan modes `Minimum` and
+`Maximum`. Swing modes are Off and Vertical. Timers, the clock, the quiet and powerful buttons, nanoe and horizontal
+swing are not supported.
+
+- **model** (*Optional*, string): The model family of the unit. Defaults to `JKE`. The families and the units and
+  remotes they cover are the ones listed by IRremoteESP8266:
+
+  - `DKE`: DKE, DKW and PKR series; remotes A75C2616-1, A75C3704 and PN1122V
+  - `JKE`: JKE series; remote A75C3747
+  - `LKE`: LKE series
+  - `NKE`: NKE series
+  - `CKP`: CKP series, such as the CS-ME10CKPG, CS-ME12CKPG and CS-ME14CKPG; remote A75C2311. These units have no
+    separate on and off commands, see the note below
+  - `RKR`: RKR series, such as the CS-Z9RKR and CS-Z24RKR; remote A75C4762
+  - `PKE`: The remote of the CU-NE9PKE. Its frames are the same as the `JKE` ones, apart from one extra bit in the
+    byte that holds the power and mode
+
+> [!NOTE]
+> The `CKP` units have no separate commands for turning on and off. The power key of the remote toggles the unit, so
+> the climate keeps track of the power state and only sends a toggle when the state changes. If the unit is switched
+> with its remote and no receiver is configured, ESPHome loses track and the power state ends up inverted.
+
+The `away` preset is the frost protection button of the remote, which is labelled 8/10°C on some remotes. It keeps the
+room above freezing by heating at 8 °C with the fan at maximum. Selecting the preset sends that frame, and it does
+not change the target temperature. Changing the mode, target temperature, fan mode or swing mode ends the preset. The
+frame is sent as captured from a CU-NE9PKE remote, and other models may not have this function.
+
+When `receiver_id` is set the climate follows the original remote, see [Using a Receiver](#ir-receiver_id). A frame has
+two sections with a 10 ms gap between them. Depending on the `idle` time of the receiver, a frame arrives whole or as
+two captures, and both work. The short frames that the quiet, powerful and nanoe buttons send are ignored.
+
+```yaml
+# Example configuration entry
+climate:
+  - platform: climate_ir_panasonic
+    name: "Panasonic AC"
+```
+
+```yaml
+# Example configuration entry for a CU-NE9PKE, following its remote
+climate:
+  - platform: climate_ir_panasonic
+    name: "Panasonic AC"
+    model: PKE
+    receiver_id: rcvr
 ```
 
 ### `daikin`
@@ -864,6 +920,7 @@ Additional configuration must be specified for this platform:
 - <APIRef text="airton.h" path="airton/airton.h" />
 - <APIRef text="ballu.h" path="ballu/ballu.h" />
 - <APIRef text="climate_ir_lg.h" path="climate_ir_lg/climate_ir_lg.h" />
+- <APIRef text="climate_ir_panasonic.h" path="climate_ir_panasonic/climate_ir_panasonic.h" />
 - <APIRef text="coolix.h" path="coolix/coolix.h" />
 - <APIRef text="daikin.h" path="daikin/daikin.h" />
 - <APIRef text="friedrich.h" path="friedrich/friedrich.h" />
