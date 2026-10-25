@@ -214,12 +214,12 @@ Supported modes are Off, Heat/Cool (the unit's auto mode), Cool, Heat, Dry and F
 > the climate keeps track of the power state and only sends a toggle when the state changes. If the unit is switched
 > with its remote and no receiver is configured, ESPHome loses track and the power state ends up inverted.
 
-The `away` preset is the frost protection button of the remote, which is labelled 8/10°C on some remotes. It keeps the
-room above freezing by heating at a low temperature with the fan at maximum. Selecting the preset sends the frame
-of the button, which holds 10 °C, and it does not change the target temperature. Changing the mode, target
-temperature, fan mode or swing mode ends the preset. The temperature down key of the remote lowers it to 8 °C. That
-frame is understood when received and the preset stays on, but ESPHome can only send the 10 °C one. The frame is
-sent as captured from a CS-NE9PKE remote, and other models may not have this function.
+The `away` preset is the frost protection mode of the remote, which is labelled 8/10°C on some remotes. It keeps the
+room above freezing by heating at a low temperature with the fan at maximum. On the remote, this mode only offers
+8 °C and 10 °C as the temperature. Selecting the preset always sends 10 °C, and it does not change the target
+temperature. Changing the mode, target temperature, fan mode or swing mode ends the preset. If the remote switches to
+frost protection at 8 °C, that is understood when received and the preset stays on, but ESPHome can only send 10 °C.
+The frames are as captured from a CS-NE9PKE remote, and other models may not have this function.
 
 When `receiver_id` is set the climate follows the original remote, see [Using a Receiver](#ir-receiver_id). A frame has
 two sections with a 10 ms gap between them. Depending on the `idle` time of the receiver, a frame arrives whole or as
