@@ -508,7 +508,8 @@ one that matches your unit or remote.
 Supported modes are Off, Heat/Cool (the unit's auto mode), Cool, Heat, Dry and Fan Only. The target temperature is
 16 to 30 °C in steps of 1 °C. Fan modes are Auto, Low, Medium and High, plus the custom fan modes `Minimum` and
 `Maximum`. Swing modes are Off and Vertical. Vertical sets the vane to automatic. Off sends a fixed vane position, see
-`vane_position` below. Timers, the clock, the quiet and powerful buttons, nanoe and horizontal swing are not supported.
+the vane select below. Timers, the clock, the quiet and powerful buttons, nanoe and horizontal swing are not
+supported.
 
 - **model** (*Optional*, string): The model family of the unit. Defaults to `JKE`. The families and the units and
   remotes they cover are the ones listed by IRremoteESP8266:
@@ -522,12 +523,6 @@ Supported modes are Off, Heat/Cool (the unit's auto mode), Cool, Heat, Dry and F
   - `RKR`: RKR series, such as the CS-Z9RKR and CS-Z24RKR; remote A75C4762
   - `PKE`: The remote of the CS-NE9PKE and CU-NE9PKE heat pump. Its frames are the same as the `JKE` ones, apart from
     one extra bit in the byte that holds the power and mode. This is the only model tested on a real unit.
-
-- **vane_position** (*Optional*): A [Select](/components/select/) for the vertical vane. The options are `Auto`, then
-  `1` (highest) to `5` (lowest). Setting a position also sets the swing mode to Off, and `Auto` sets it to Vertical.
-  When the remote sets the vane, the select follows it. Without this option, swing Off sends the lowest position in
-  Heat mode and the highest in the other modes. The chosen position is not kept after a restart. Horizontal vanes are
-  not controlled. All options from [Select](/components/select/#config-select) are available.
 
 > [!NOTE]
 > The `CKP` units have no separate commands for turning on and off. The power key of the remote toggles the unit, so
@@ -572,12 +567,27 @@ climate:
 # Example configuration entry for a CS-NE9PKE, following its remote
 climate:
   - platform: panasonic_ir
+    id: panasonic_ac
     name: "Panasonic AC"
     model: PKE
     receiver_id: rcvr
+
+select:
+  - platform: panasonic_ir
+    panasonic_ir_id: panasonic_ac
     vane_position:
       name: "Panasonic AC vane position"
 ```
+
+The `panasonic_ir` select platform adds a [Select](/components/select/) for the vertical vane:
+
+- **panasonic_ir_id** (*Optional*, [ID](/guides/configuration-types#id)): The `panasonic_ir` climate to control.
+  Only needed with more than one.
+- **vane_position** (**Required**): The options are `Auto`, then `1` (highest) to `5` (lowest). Setting a position
+  also sets the swing mode to Off, and `Auto` sets it to Vertical. When the remote sets the vane, the select follows it.
+  Without this select, swing Off sends the lowest position in Heat mode and the highest in the other modes. The chosen
+  position is not kept after a restart. Horizontal vanes are not controlled. All options from
+  [Select](/components/select/#config-select) are available.
 
 ### `pd_pioneer_ir`
 
