@@ -556,7 +556,9 @@ two captures, and both work. The short frames that the quiet, powerful and nanoe
 > This was verified on an ESP32 only. The ESP32-C3, C5, C6 and H2 have 96 symbols of RMT memory (see
 > [ESP32 RMT Configuration Variables](/components/remote_receiver/#esp32-rmt-configuration-variables)), which is too
 > few for either option. The ESP32-S3 and ESP32-P4 have 192, which is enough for the second section but not for a whole
-> frame, unless `use_dma` is enabled. Then `rmt_symbols` is the size of a DMA buffer and can be set higher.
+> frame, unless `use_dma` is enabled. Then `rmt_symbols` is the size of a DMA buffer and can be set higher. The
+> ESP32-S2 has 256 symbols shared by every receiver and transmitter, so a whole frame takes all of them, while
+> `idle: 5ms` needs only the default 192.
 
 ```yaml
 # Example configuration entry
@@ -958,7 +960,6 @@ Additional configuration must be specified for this platform:
 - <APIRef text="airton.h" path="airton/airton.h" />
 - <APIRef text="ballu.h" path="ballu/ballu.h" />
 - <APIRef text="climate_ir_lg.h" path="climate_ir_lg/climate_ir_lg.h" />
-- <APIRef text="panasonic_ir.h" path="panasonic_ir/panasonic_ir.h" />
 - <APIRef text="coolix.h" path="coolix/coolix.h" />
 - <APIRef text="daikin.h" path="daikin/daikin.h" />
 - <APIRef text="friedrich.h" path="friedrich/friedrich.h" />
@@ -970,6 +971,7 @@ Additional configuration must be specified for this platform:
 - <APIRef text="midea_ir.h" path="midea_ir/midea_ir.h" />
 - <APIRef text="mistral_ir.h" path="mistral_ir/mistral_ir.h" />
 - <APIRef text="mitsubishi.h" path="mitsubishi/mitsubishi.h" />
+- <APIRef text="panasonic_ir.h" path="panasonic_ir/panasonic_ir.h" />
 - <APIRef text="pd_pioneer_ir.h" path="pd_pioneer_ir/pd_pioneer_ir.h" />
 - <APIRef text="remko_ar715.h" path="remko_ar715/remko_ar715.h" />
 - <APIRef text="siemens_ira211.h" path="siemens_ira211/siemens_ira211.h" />
