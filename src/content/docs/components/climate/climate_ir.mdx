@@ -525,6 +525,10 @@ supported.
     one extra bit in the byte that holds the power and mode. This is the only model tested on a real unit.
 
 > [!NOTE]
+> Vane `Auto` does not make the vane swing. The unit picks a position itself. Home Assistant labels this state
+> "vertical swing" because the climate maps it to the Vertical swing mode.
+
+> [!NOTE]
 > The `CKP` units have no separate commands for turning on and off. The power key of the remote toggles the unit, so
 > the climate keeps track of the power state and only sends a toggle when the state changes. If the unit is switched
 > with its remote and no receiver is configured, ESPHome loses track and the power state ends up inverted. After a
